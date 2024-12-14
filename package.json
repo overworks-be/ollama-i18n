@@ -1,0 +1,51 @@
+{
+  "name": "ollama-i18n",
+  "version": "1.0.0",
+  "description": "CLI tool for automated translation of i18n locale files using Ollama",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "bin": {
+    "i18n-translate": "./dist/index.js"
+  },
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "vitest",
+    "lint": "eslint src/**/*.ts",
+    "format": "prettier --write \"src/**/*.ts\"",
+    "prepare": "npm run build",
+    "prepublishOnly": "npm test && npm run lint",
+    "dev": "ts-node -r tsconfig-paths/register src/index.ts",
+    "start": "node -r tsconfig-paths/register dist/index.js"
+  },
+  "keywords": [
+    "i18n",
+    "translation",
+    "cli",
+    "ollama",
+    "localization"
+  ],
+  "author": "Fabio Kapsahili",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^12.1.0",
+    "ollama": "^0.5.11",
+    "yoctocolors": "^2.1.1"
+  },
+  "files": [
+    "dist/**/*"
+  ],
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.10.2",
+    "@typescript-eslint/parser": "^8.18.0",
+    "eslint": "^9.17.0",
+    "prettier": "^3.4.2",
+    "ts-node": "^10.9.2",
+    "tsconfig-paths": "^4.2.0",
+    "typescript": "^5.7.2"
+  }
+}
