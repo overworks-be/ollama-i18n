@@ -5,6 +5,7 @@ export interface CliOptions {
   source: string;
   target?: string;
   model: string;
+  cache: boolean;
 }
 
 export function parseArgs(): CliOptions {
@@ -21,14 +22,17 @@ export function parseArgs(): CliOptions {
       'Target language file name without extension (optional - if not provided, translates to all detected locales)'
     )
     .option('-m, --model <name>', 'Ollama model to use', 'llama3.2:3b')
+    .option('--no-cache', 'Translate all keys and ignore existing translations')
     .parse(process.argv);
 
-  const { dir, source, target, model } = program.opts();
+  // How to get --no-cache here?
+  const { dir, source, target, model, cache } = program.opts();
 
   return {
     dir,
     source,
     target,
     model,
+    cache,
   };
 }

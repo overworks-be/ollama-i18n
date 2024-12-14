@@ -41,9 +41,44 @@ async function main() {
     await Promise.all(
       targetLocales.map(async (locale) => {
         try {
-          const translatedData = await translator.translateObject(sourceData, locale);
+          let dataToTranslate = sourceData;
           const targetFile = path.join(args.dir, `${locale}.json`);
-          await writeJSONFile(targetFile, translatedData);
+
+          if (args.cache) {
+            try {
+              const existingData = await readJSONFile(targetFile);
+              dataToTranslate = Object.fromEntries(
+                Object.entries(sourceData).filter(([key]) => !(key in existingData))
+              );
+
+              if (Object.keys(dataToTranslate).length === 0) {
+                logger.info(`No new keys to translate for ${locale}`);
+                return;
+              }
+              logger.info(
+                `Found ${Object.keys(dataToTranslate).length} new keys to translate for ${locale}`
+              );
+            } catch (error) {
+              logger.info(`No existing translations found for ${locale}, will translate all keys`);
+            }
+          }
+
+          const translatedData = await translator.translateObject(dataToTranslate, locale);
+
+          if (args.cache) {
+            try {
+              const existingData = await readJSONFile(targetFile);
+              Object.assign(existingData, translatedData);
+              await writeJSONFile(targetFile, existingData);
+            } catch {
+              // write the new translations
+              await writeJSONFile(targetFile, translatedData);
+            }
+          } else {
+            // No caching
+            await writeJSONFile(targetFile, translatedData);
+          }
+
           logger.success(`Completed ${locale}`);
         } catch (error) {
           logger.error(
