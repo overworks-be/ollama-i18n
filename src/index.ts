@@ -6,6 +6,7 @@ import { Translator } from '@/core/translator';
 import { findLocaleFiles, readJSONFile, writeJSONFile } from '@/utils/file';
 import { countStrings, createProgressBar } from '@/utils/progress';
 import { validateContent } from '@/utils/validation';
+import { pullModel } from '@/utils/ollama';
 import { logger } from '@/utils/logger';
 
 async function main() {
@@ -25,6 +26,9 @@ async function main() {
     logger.info(`Reading source file: ${sourceFile}`);
     const sourceData = await readJSONFile(sourceFile);
     validateContent(sourceData);
+
+    // Make sure the model exists
+    await pullModel(args.model);
 
     const stringsPerLocale = countStrings(sourceData);
     const totalStrings = stringsPerLocale * targetLocales.length;

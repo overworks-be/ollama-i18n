@@ -8,7 +8,8 @@ export async function readJSONFile(filepath: string) {
     const data = await fs.readFile(filepath, 'utf-8');
     return JSON.parse(data);
   } catch (error) {
-    logger.error(`Error reading file ${filepath}`);
+    const msg = error instanceof Error ? error.message : 'Unknown error';
+    logger.error(`Error reading file ${filepath}: ${msg}`);
     throw error;
   }
 }
