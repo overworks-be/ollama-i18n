@@ -1,6 +1,6 @@
 import path from 'path';
 import { promises as fs } from 'fs';
-import { LocaleData } from '@/core/types';
+import { RootLocaleData } from '@/core/types';
 import { logger } from './logger';
 
 export async function readJSONFile(filepath: string) {
@@ -13,7 +13,7 @@ export async function readJSONFile(filepath: string) {
   }
 }
 
-export async function writeJSONFile(filepath: string, localeData: LocaleData) {
+export async function writeJSONFile(filepath: string, localeData: RootLocaleData) {
   try {
     await fs.mkdir(path.dirname(filepath), { recursive: true });
     await fs.writeFile(filepath, JSON.stringify(localeData, null, 2));

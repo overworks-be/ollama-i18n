@@ -1,6 +1,10 @@
+export type LocaleValue = string | LocaleData | LocaleData[];
+
 export interface LocaleData {
-  [key: string]: string | LocaleData;
+  [key: string]: LocaleValue;
 }
+
+export type RootLocaleData = LocaleData | LocaleData[];
 
 export interface TranslationOptions {
   model: string;

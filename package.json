@@ -29,9 +29,12 @@
   "author": "Fabio Kapsahili",
   "license": "MIT",
   "dependencies": {
+    "cli-progress": "^3.12.0",
     "commander": "^12.1.0",
     "ollama": "^0.5.11",
-    "yoctocolors": "^2.1.1"
+    "yoctocolors": "^2.1.1",
+    "zod": "^3.24.1",
+    "zod-to-json-schema": "^3.24.1"
   },
   "files": [
     "dist/**/*"
@@ -40,6 +43,7 @@
     "node": ">=18.0.0"
   },
   "devDependencies": {
+    "@types/cli-progress": "^3.11.6",
     "@types/node": "^22.10.2",
     "@typescript-eslint/parser": "^8.18.0",
     "eslint": "^9.17.0",

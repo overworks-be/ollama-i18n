@@ -1,54 +1,60 @@
 #!/usr/bin/env node
 
+import path from 'path';
 import { parseArgs } from '@/cli/args';
 import { Translator } from '@/core/translator';
-import { LocaleData } from '@/core/types';
 import { findLocaleFiles, readJSONFile, writeJSONFile } from '@/utils/file';
+import { countStrings, createProgressBar } from '@/utils/progress';
+import { validateContent } from '@/utils/validation';
 import { logger } from '@/utils/logger';
-import path from 'path';
-
-async function translateLocale(
-  translator: Translator,
-  sourceData: LocaleData,
-  targetLang: string,
-  dir: string
-): Promise<void> {
-  try {
-    logger.info(`Starting translation for ${targetLang}...`);
-    const translatedData = await translator.translateObject(sourceData, targetLang);
-
-    const targetFile = path.join(dir, `${targetLang}.json`);
-    await writeJSONFile(targetFile, translatedData);
-    logger.success(`Successfully translated to ${targetLang}`);
-  } catch (error) {
-    logger.error(
-      `Failed to translate ${targetLang}: ${error instanceof Error ? error.message : 'Unknown error'}`
-    );
-  }
-}
 
 async function main() {
   try {
     const args = parseArgs();
     const sourceFile = path.join(args.dir, `${args.source}.json`);
 
-    const targetLocales = await findLocaleFiles(args.dir, args.source);
-    logger.info(`Found ${targetLocales.length} locale files to translate.`);
+    logger.info('Detecting locale files...');
+    const allLocales = await findLocaleFiles(args.dir, args.source);
+    const targetLocales = args.target ? [args.target] : allLocales;
+
+    if (args.target && !allLocales.includes(args.target)) {
+      throw new Error(`Target locale file '${args.target}.json' not found in ${args.dir}`);
+    }
+    logger.info(`Will translate to: ${targetLocales.join(', ')}\n`);
 
     logger.info(`Reading source file: ${sourceFile}`);
     const sourceData = await readJSONFile(sourceFile);
+    validateContent(sourceData);
+
+    const stringsPerLocale = countStrings(sourceData);
+    const totalStrings = stringsPerLocale * targetLocales.length;
+
+    const progressBar = createProgressBar(targetLocales);
+    progressBar.start(totalStrings, 0);
 
     const translator = new Translator({
       model: args.model,
       sourceLang: args.source,
     });
+    translator.setProgressBar(progressBar);
 
-    const promises = targetLocales.map((locale) =>
-      translateLocale(translator, sourceData, locale, args.dir)
+    await Promise.all(
+      targetLocales.map(async (locale) => {
+        try {
+          const translatedData = await translator.translateObject(sourceData, locale);
+          const targetFile = path.join(args.dir, `${locale}.json`);
+          await writeJSONFile(targetFile, translatedData);
+          logger.success(`Completed ${locale}`);
+        } catch (error) {
+          logger.error(
+            `Failed ${locale}: ${error instanceof Error ? error.message : 'Unknown error'}`
+          );
+        }
+      })
     );
-    await Promise.all(promises);
 
-    logger.success('Translation completed successfully!');
+    progressBar.stop();
+    logger.success('\nAll translations completed successfully! 🎉');
   } catch (error) {
     logger.error(error instanceof Error ? error.message : 'An unknown error occurred');
     process.exit(1);

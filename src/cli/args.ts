@@ -3,6 +3,7 @@ import { Command } from 'commander';
 export interface CliOptions {
   dir: string;
   source: string;
+  target?: string;
   model: string;
 }
 
@@ -15,14 +16,19 @@ export function parseArgs(): CliOptions {
     .version('1.0.0')
     .requiredOption('-d, --dir <path>', 'Directory containing the locale files')
     .requiredOption('-s, --source <locale>', 'Source language file name without extension')
+    .option(
+      '-t, --target <locale>',
+      'Target language file name without extension (optional - if not provided, translates to all detected locales)'
+    )
     .option('-m, --model <name>', 'Ollama model to use', 'llama3.2:3b')
     .parse(process.argv);
 
-  const { dir, source, model } = program.opts();
+  const { dir, source, target, model } = program.opts();
 
   return {
     dir,
     source,
+    target,
     model,
   };
 }
