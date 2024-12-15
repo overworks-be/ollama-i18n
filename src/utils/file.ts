@@ -9,8 +9,9 @@ export async function readJSONFile(filepath: string) {
     return JSON.parse(data);
   } catch (error) {
     const msg = error instanceof Error ? error.message : 'Unknown error';
-    logger.error(`Error reading file ${filepath}: ${msg}`);
-    throw error;
+    const errorMsg = `Error reading file ${filepath}: ${msg}`;
+    logger.error(errorMsg);
+    throw new Error(errorMsg);
   }
 }
 

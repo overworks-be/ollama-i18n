@@ -25,7 +25,6 @@ export function parseArgs(): CliOptions {
     .option('--no-cache', 'Translate all keys and ignore existing translations')
     .parse(process.argv);
 
-  // How to get --no-cache here?
   const { dir, source, target, model, cache } = program.opts();
 
   return {
