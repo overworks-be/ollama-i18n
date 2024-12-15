@@ -2,6 +2,8 @@
 
 A tiny CLI tool for automated translation of i18n locale files using Ollama models.
 
+![](./media/preview.png)
+
 ## Why?
 
 Translating i18n files locally with "small" LLMs has a few benefits:
