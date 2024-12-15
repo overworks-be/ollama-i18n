@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
-    "i18n-translate": "./dist/index.js"
+    "ollama-i18n": "./dist/index.js"
   },
   "directories": {
     "test": "tests"
@@ -17,7 +17,8 @@
     "prepare": "npm run build",
     "prepublishOnly": "npm test && npm run lint",
     "dev": "ts-node -r tsconfig-paths/register src/index.ts",
-    "start": "node -r tsconfig-paths/register dist/index.js"
+    "start": "node -r tsconfig-paths/register dist/index.js",
+    "build": "tsup"
   },
   "keywords": [
     "i18n",
@@ -51,6 +52,7 @@
     "prettier": "^3.4.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
+    "tsup": "^8.3.5",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   }
