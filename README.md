@@ -41,6 +41,8 @@ This will:
 3. Translate any missing translations to the target language
 4. Keep any existing translations (default)
 
+**Note**: All locale files must exist in the provided directory (they can be empty) when running without `--target` (`-t`), while using `--target` will create the locale file if it doesn't exist yet.
+
 ## Options
 
 ```bash
