@@ -133,3 +133,11 @@ Example file content:
   }
 }
 ```
+
+## Development
+
+To run the CLI locally using a `./locales` directory with two locales, `en.json` and `de.json`, run the following command:
+
+```bash
+npm run dev -- --dir ./locales -s en -t de
+```

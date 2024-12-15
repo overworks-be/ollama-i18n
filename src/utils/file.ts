@@ -3,11 +3,25 @@ import { promises as fs } from 'fs';
 import { RootLocaleData } from '@/core/types';
 import { logger } from './logger';
 
-export async function readJSONFile(filepath: string) {
+export async function readJSONFile(
+  filepath: string,
+  allowNotFound = false
+): Promise<RootLocaleData | null> {
   try {
     const data = await fs.readFile(filepath, 'utf-8');
+    if (!data.trim()) {
+      // empty json file
+      return {} as RootLocaleData;
+    }
     return JSON.parse(data);
   } catch (error) {
+    if (error instanceof Error && error.message.includes('ENOENT')) {
+      if (allowNotFound) {
+        // Do nothing
+        return null;
+      }
+    }
+
     const msg = error instanceof Error ? error.message : 'Unknown error';
     const errorMsg = `Error reading file ${filepath}: ${msg}`;
     logger.error(errorMsg);
@@ -25,7 +39,11 @@ export async function writeJSONFile(filepath: string, localeData: RootLocaleData
   }
 }
 
-export async function findLocaleFiles(dir: string, sourceLocale: string) {
+export async function findLocaleFiles(
+  dir: string,
+  sourceLocale: string,
+  allowEmpty = false
+): Promise<string[]> {
   try {
     // Make sure the directory exists
     await fs.access(dir);
@@ -40,7 +58,7 @@ export async function findLocaleFiles(dir: string, sourceLocale: string) {
       })
       .map((file) => path.parse(file).name);
 
-    if (localeFiles.length === 0) {
+    if (localeFiles.length === 0 && !allowEmpty) {
       throw new Error(
         `No locale files found in ${dir}. Make sure the locale files exist in the specified directory.`
       );

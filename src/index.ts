@@ -8,6 +8,7 @@ import { countStrings, createProgressBar } from '@/utils/progress';
 import { validateContent } from '@/utils/validation';
 import { pullModel } from '@/utils/ollama';
 import { logger } from '@/utils/logger';
+import { RootLocaleData } from '@/core/types';
 
 async function main() {
   try {
@@ -15,16 +16,12 @@ async function main() {
     const sourceFile = path.join(args.dir, `${args.source}.json`);
 
     logger.info('Detecting locale files...');
-    const allLocales = await findLocaleFiles(args.dir, args.source);
+    const allLocales = await findLocaleFiles(args.dir, args.source, !!args.target);
     const targetLocales = args.target ? [args.target] : allLocales;
 
-    if (args.target && !allLocales.includes(args.target)) {
-      throw new Error(`Target locale file '${args.target}.json' not found in ${args.dir}`);
-    }
     logger.info(`Will translate to: ${targetLocales.join(', ')}\n`);
-
     logger.info(`Reading source file: ${sourceFile}`);
-    const sourceData = await readJSONFile(sourceFile);
+    const sourceData = (await readJSONFile(sourceFile)) as RootLocaleData;
     validateContent(sourceData);
 
     // Make sure the model exists
@@ -45,12 +42,12 @@ async function main() {
     await Promise.all(
       targetLocales.map(async (locale) => {
         try {
-          let dataToTranslate = sourceData;
           const targetFile = path.join(args.dir, `${locale}.json`);
+          let dataToTranslate: RootLocaleData = sourceData;
 
           if (args.cache) {
-            try {
-              const existingData = await readJSONFile(targetFile);
+            const existingData = await readJSONFile(targetFile, true);
+            if (existingData) {
               dataToTranslate = Object.fromEntries(
                 Object.entries(sourceData).filter(([key]) => !(key in existingData))
               );
@@ -62,24 +59,16 @@ async function main() {
               logger.info(
                 `Found ${Object.keys(dataToTranslate).length} new keys to translate for ${locale}`
               );
-            } catch (error) {
+              const translatedData = await translator.translateObject(dataToTranslate, locale);
+              await writeJSONFile(targetFile, { ...existingData, ...translatedData });
+            } else {
               logger.info(`No existing translations found for ${locale}, will translate all keys`);
-            }
-          }
-
-          const translatedData = await translator.translateObject(dataToTranslate, locale);
-
-          if (args.cache) {
-            try {
-              const existingData = await readJSONFile(targetFile);
-              Object.assign(existingData, translatedData);
-              await writeJSONFile(targetFile, existingData);
-            } catch {
-              // write the new translations
+              const translatedData = await translator.translateObject(sourceData, locale);
               await writeJSONFile(targetFile, translatedData);
             }
           } else {
-            // No caching
+            // No caching, just translate
+            const translatedData = await translator.translateObject(sourceData, locale);
             await writeJSONFile(targetFile, translatedData);
           }
 
