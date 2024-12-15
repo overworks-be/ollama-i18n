@@ -12,10 +12,8 @@
   },
   "scripts": {
     "test": "vitest",
-    "test:coverage": "vitest run --coverage",
     "format": "prettier --write \"src/**/*.ts\"",
     "prepare": "npm run build",
-    "prepublishOnly": "npm test && npm run lint",
     "dev": "ts-node -r tsconfig-paths/register src/index.ts",
     "start": "node -r tsconfig-paths/register dist/index.js",
     "build": "tsup"
@@ -46,9 +44,6 @@
   "devDependencies": {
     "@types/cli-progress": "^3.11.6",
     "@types/node": "^22.10.2",
-    "@typescript-eslint/parser": "^8.18.0",
-    "@vitest/coverage-v8": "^2.1.8",
-    "eslint": "^9.17.0",
     "prettier": "^3.4.2",
     "ts-node": "^10.9.2",
     "tsconfig-paths": "^4.2.0",
