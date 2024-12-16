@@ -14,7 +14,7 @@ export function parseArgs(): CliOptions {
 
   program
     .name('ollama-i18n')
-    .description('CLI tool for automated translation of i18n locale files using Ollamna models')
+    .description('CLI tool for automated translation of i18n locale files using Ollama models')
     .version(getPackageVersion())
     .requiredOption('-d, --dir <path>', 'Directory containing the locale files')
     .requiredOption('-s, --source <locale>', 'Source language file name without extension')
