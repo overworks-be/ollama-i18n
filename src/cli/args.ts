@@ -1,4 +1,5 @@
 import { Command } from 'commander';
+import { getPackageVersion } from '@/utils/version';
 
 export interface CliOptions {
   dir: string;
@@ -14,7 +15,7 @@ export function parseArgs(): CliOptions {
   program
     .name('ollama-i18n')
     .description('CLI tool for automated translation of i18n locale files using Ollamna models')
-    .version('1.0.0')
+    .version(getPackageVersion())
     .requiredOption('-d, --dir <path>', 'Directory containing the locale files')
     .requiredOption('-s, --source <locale>', 'Source language file name without extension')
     .option(

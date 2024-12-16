@@ -1,7 +1,8 @@
 {
   "name": "ollama-i18n",
-  "version": "1.0.0",
+  "version": "1.1.2",
   "description": "CLI tool for automated translation of i18n locale files using Ollama",
+  "type": "module",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "bin": {
@@ -28,10 +29,10 @@
   "author": "Fabio Kapsahili",
   "license": "MIT",
   "dependencies": {
+    "chalk": "^5.3.0",
     "cli-progress": "^3.12.0",
     "commander": "^12.1.0",
     "ollama": "^0.5.11",
-    "yoctocolors": "^2.1.1",
     "zod": "^3.24.1",
     "zod-to-json-schema": "^3.24.1"
   },

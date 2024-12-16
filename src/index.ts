@@ -89,9 +89,7 @@ async function main() {
   }
 }
 
-if (require.main === module) {
-  main();
-}
+main();
 
 export { Translator } from '@/core/translator';
 export * from '@/core/types';
