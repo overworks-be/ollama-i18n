@@ -1,4 +1,4 @@
-import chalk from 'chalk';
+import { cyan } from 'yoctocolors';
 import { SingleBar, Presets } from 'cli-progress';
 import { RootLocaleData } from '@/core/types';
 
@@ -17,7 +17,7 @@ export function countStrings(obj: RootLocaleData): number {
 export function createProgressBar(locales: string[]): SingleBar {
   return new SingleBar(
     {
-      format: `Translating ${locales.length} locale files |${chalk.cyan('{bar}')}| {percentage}% | {value}/{total} strings`,
+      format: `Translating ${locales.length} locale files |${cyan('{bar}')}| {percentage}% | {value}/{total} strings`,
       barCompleteChar: '█',
       barIncompleteChar: '░',
       hideCursor: true,
