@@ -64,13 +64,13 @@ Translate to a specific language:
 ollama-i18n -s en -t fr -d ./locales
 ```
 
-Use a different Ollama model:
+Use a different Ollama model and re-translate all files in the `./locales` directory:
 
 ```bash
-ollama-i18n -s en -d ./locales -m mistral
+ollama-i18n -s en -d ./locales -m mistral --no-cache
 ```
 
-Retranslate all keys (do not use the cache):
+Retranslate all keys using the default model:
 
 ```bash
 ollama-i18n -s en -d ./locales --no-cache
