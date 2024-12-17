@@ -15,8 +15,7 @@
     "test": "vitest",
     "format": "prettier --write \"src/**/*.ts\"",
     "prepare": "npm run build",
-    "dev": "ts-node -r tsconfig-paths/register src/index.ts",
-    "start": "node -r tsconfig-paths/register dist/index.js",
+    "dev": "tsx src/index.ts",
     "build": "tsup"
   },
   "keywords": [
@@ -46,9 +45,8 @@
     "@types/cli-progress": "^3.11.6",
     "@types/node": "^22.10.2",
     "prettier": "^3.4.2",
-    "ts-node": "^10.9.2",
-    "tsconfig-paths": "^4.2.0",
     "tsup": "^8.3.5",
+    "tsx": "^4.19.2",
     "typescript": "^5.7.2",
     "vitest": "^2.1.8"
   }
