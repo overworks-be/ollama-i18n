@@ -1,4 +1,4 @@
-export type LocaleValue = string | LocaleData | LocaleData[];
+export type LocaleValue = string | LocaleData | string[] | RootLocaleData[];
 
 export interface LocaleData {
   [key: string]: LocaleValue;

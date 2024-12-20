@@ -47,13 +47,17 @@ This will:
 
 ```bash
 Options:
-  -d, --dir <path>    Directory containing the locale files (required)
-  -s, --source <locale>  Source language file name without extension (required)
-  -t, --target <locale>  Target language file name without extension (optional)
-  -m, --model <name>   Ollama model to use (default: "llama3.2:3b")
-  --no-cache          Translate all keys and ignore existing translations
-  -h, --help          Show help information
-  -v, --version       Show version number
+  -d, --dir <path>        Directory containing the locale files (required)
+  -s, --source <locale>   Source language file name without extension (required)
+  -t, --target <locale>   Target language file name without extension (optional)
+  -m, --model <name>      Ollama model to use (default: "llama3.2:3b")
+  --no-cache              Translate all keys and ignore existing translations
+  --namespace             Enable namespace processing (optional)
+  --input-locale <locale> Specify the input locale for translation (optional)
+  --output-locale <locale> Specify the output locale for translation (optional)
+  --variable-mode <mode>  Specify the variable mode (curly or dollar) (default: "curly")
+  -h, --help              Show help information
+  -v, --version           Show version number
 ```
 
 ## Examples
@@ -75,6 +79,23 @@ Retranslate all keys using the default model:
 ```bash
 ollama-i18n -s en -d ./locales --no-cache
 ```
+
+Translate using the `dollar` variable mode:
+
+```bash
+ollama-i18n -s en -d ./locales --variable-mode dollar
+```
+
+Enable namespace processing with input and output locales:
+
+```bash
+ollama-i18n --namespace --input-locale en --output-locale fr -d ./locales
+```
+
+This will:
+1. Treat each JSON file as a namespace (e.g., `common.json`, `validation.json`).
+2. Translate each file individually from the specified input locale to the output locale.
+3. Create a directory for the output locale if it does not already exist.
 
 ## Using as a Pre-commit Hook
 
@@ -144,4 +165,16 @@ To run the CLI locally using a `./locales` directory with two locales, `en.json`
 
 ```bash
 npm run dev -- --dir ./locales -s en -t de
+```
+
+Translate with a specific variable mode:
+
+```bash
+npm run dev -- --dir ./locales -s en -t de --variable-mode dollar
+```
+
+Translate with namespace processing:
+
+```bash
+npm run dev -- --dir ./locales/en --namespace --input-locale en --output-locale fr
 ```
